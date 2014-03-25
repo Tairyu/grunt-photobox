@@ -65,10 +65,11 @@ page.open( url, function( status ) {
     };
 
     var imgPath = indexPath +
-                    'img/current/' +
-                    url.replace( /(http:\/\/|https:\/\/)/, '').replace( /\//g, '-') +
-                    '-' + width +
-                    '.png';
+                  'img/current/' +
+                  url.replace( /(http:\/\/|https:\/\/)/, '')
+                     .replace( /:[0-9]*/g, '')
+                     .replace( /\//g, '-') +
+                    '-' + width + '.png';
 
     console.log( 'Rendering ' + imgPath );
     page.render( imgPath );
