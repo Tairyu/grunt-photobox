@@ -83,8 +83,9 @@ PhotoBox.prototype.createDiffImages = function() {
   this.pictures.forEach( function( picture ) {
     // TODO that can be done in on regex
     picture = picture.replace( /(http:\/\/|https:\/\/)/, '')
-                      .replace( /(\/)|(\|)/g, '-' )
-                      .replace( '#', '-' );
+                     .replace( /:[0-9]*/g, '')
+                     .replace( /(\/)|(\|)/g, '-' )
+                     .replace( '#', '-' );
 
     this.grunt.log.writeln( 'started diff for ' + picture );
 
