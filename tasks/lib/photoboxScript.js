@@ -68,8 +68,9 @@ page.open( url, function( status ) {
                   'img/current/' +
                   url.replace( /(http:\/\/|https:\/\/)/, '')
                      .replace( /:[0-9]*/g, '')
-                     .replace( /\//g, '-') +
-                    '-' + width + '.png';
+                     .replace( /\//g, '-')
+                     .replace(/\?/g, '!') +
+                  '-' + width + '.png';
 
     console.log( 'Rendering ' + imgPath );
     page.render( imgPath );

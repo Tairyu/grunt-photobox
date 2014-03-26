@@ -261,7 +261,7 @@
   <h1><i></i>Photobox</h1>
   <main class="">
     <% _.each( _.keys( templateData ), function( url ) { %>
-      <% var name  = url.replace( /(http:\/\/|https:\/\/)/, '' ).replace( /:[0-9]*/g, '').replace( /\//g, '-' ); %>
+      <% var name  = url.replace( /(http:\/\/|https:\/\/)/, '' ).replace( /:[0-9]*/g, '').replace( /\//g, '-' ).replace(/\?/g, '!'); %>
       <div class="name"><a href="<%= url %>" data-name="<%= name %>" target="_blank"><%= name %></a></div>
 
       <% _.each( templateData[ url ], function( size ) {%>

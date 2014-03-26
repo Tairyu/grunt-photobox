@@ -85,6 +85,7 @@ PhotoBox.prototype.createDiffImages = function() {
     picture = picture.replace( /(http:\/\/|https:\/\/)/, '')
                      .replace( /:[0-9]*/g, '')
                      .replace( /(\/)|(\|)/g, '-' )
+                     .replace(/\?/g, '!')
                      .replace( '#', '-' );
 
     this.grunt.log.writeln( 'started diff for ' + picture );
