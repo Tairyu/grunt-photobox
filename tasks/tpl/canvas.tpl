@@ -279,7 +279,9 @@
           <div class="colContainer hide">
             <div class="col">
               <h2>Old screens</h2>
-              <img src="" class="last" data-src="img/last/<%= name %>-<%= size %>.png?<%= now %>" data-size="<%= size %>">
+              <a href="img/last/<%= name %>-<%= size %>.png?<%= now %>" target="_blank">
+                <img src="" class="last" data-src="img/last/<%= name %>-<%= size %>.png?<%= now %>" data-size="<%= size %>">
+              </a>
               <p><%= timestamps.last %></p>
             </div><div class="col">
               <h2>Difference</h2>
@@ -289,7 +291,9 @@
               <canvas>canvas is not supported</canvas>
             </div><div class="col">
               <h2>New Screens</h2>
-              <img src="" class="current" data-src="img/current/<%= name %>-<%= size %>.png?<%= now %>" data-size="<%= size %>">
+              <a href="img/current/<%= name %>-<%= size %>.png?<%= now %>" target="_blank">
+                <img src="" class="current" data-src="img/current/<%= name %>-<%= size %>.png?<%= now %>" data-size="<%= size %>">
+              </a>
               <p><%= timestamps.current %></p>
             </div>
           </div>
