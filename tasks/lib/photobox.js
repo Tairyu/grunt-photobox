@@ -564,15 +564,15 @@ PhotoBox.prototype.tookPictureHandler = function() {
       );
 
       this.createDiffImages();
-    } else {
-      if ( this.template === 'canvas' ) {
-        // copy worker to photobox folder
-        // grunt.file.copy( srcpath, destpath );
-        this.grunt.file.copy(
-          path.dirname( __dirname ) + '/assets/scripts/worker.js',
-          this.options.indexPath + '/scripts/worker.js'
-        );
-      }
+    }
+    else if(this.template === 'canvas') {
+      // copy asset resources.
+      var that = this;
+      this.grunt.file.recurse(path.dirname(__dirname)+'/assets', function(srcpath, root, sub, filename){
+        if(sub.indexOf('img') === -1) {
+          that.grunt.file.copy(srcpath, path.join(that.options.indexPath, sub, filename));
+        }
+      });
 
       this.createIndexFile();
       // call done() to exit grunt task
