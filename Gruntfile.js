@@ -38,6 +38,7 @@ module.exports = function(grunt) {
           screenSizes    : [ '960', '350', '1200' ],
           template       : {
             name    : 'canvas',
+            assets_dir: 'custom_assets/',
             options : {
               highlightColor : '#0000ff', // template.options.hightlightColor || highlightcolor || default
               diffFilter     : 'grayscale' //  default == no filter 'grayscale' | 'darker' | 'brighter'

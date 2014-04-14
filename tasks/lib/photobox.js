@@ -34,6 +34,7 @@ var PhotoBox = function( grunt, options, callback ) {
     this.template = options.template;
   } else if ( typeof options.template === 'object' ) {
     this.template = options.template.name;
+    this.customAssets = options.template.assets_dir;
   }
 
   this.movePictures();
@@ -567,18 +568,26 @@ PhotoBox.prototype.tookPictureHandler = function() {
     }
     else if(this.template === 'canvas') {
       // copy asset resources.
-      var that = this;
-      this.grunt.file.recurse(path.dirname(__dirname)+'/assets', function(srcpath, root, sub, filename){
-        if(sub.indexOf('img') === -1) {
-          that.grunt.file.copy(srcpath, path.join(that.options.indexPath, sub, filename));
-        }
-      });
-
+      this.copyAssetFiles(path.dirname(__dirname)+'/assets');
+      if(typeof this.customAssets !== 'undefined'){
+        this.copyAssetFiles(this.customAssets);
+      }
       this.createIndexFile();
       // call done() to exit grunt task
       this.callback();
     }
   }
+};
+
+PhotoBox.prototype.copyAssetFiles = function(srcpath){
+  var that = this;
+  this.grunt.file.recurse(srcpath, function(srcpath, root, sub, filename){
+    if(sub.indexOf('img') === -1) {
+      if(sub.indexOf('scripts') === 0 || sub.indexOf('css') === 0) {
+        that.grunt.file.copy(srcpath, path.join(that.options.indexPath, sub, filename));
+      }
+    }
+  });
 };
 
 
