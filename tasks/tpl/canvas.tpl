@@ -186,8 +186,13 @@
     .row {
       width: 100%;
 
-      padding: 1% 0;
+      padding: 0 0 1% 0;
       margin: 0 0 2% 0;
+    }
+
+    .row:last-child {
+      padding: 0 0 3% 0;
+      margin: 0;
     }
 
     .col {
@@ -228,16 +233,14 @@
       clear: both;
     }
 
-    .name, .size {
-      text-align: center;
-      color: #3da1fe;
-      float: left;
-
-      color: #fff;
-
+    .hide {
+      display: none;
     }
 
     .name {
+      text-align: center;
+      float: left;
+      color: #fff;
       font-size: 2em;
 
       padding: 0.5em 0.5em 0.5em 1em;
@@ -248,15 +251,20 @@
     }
 
     .size {
+      text-align: center;
+      color: #fff;
       font-size: 1.5em;
       margin: 0.5em 0 ;
       padding: 0.5em;
       clear: left;
 
+      cursor: pointer;
+
       background-color: #0F3340;
       box-shadow: inset 0 1px 2px #000;
     }
   </style>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
 </head>
 <body>
   <h1><i></i>Photobox</h1>
@@ -268,7 +276,7 @@
       <% _.each( templateData[ url ], function( size ) {%>
         <div class="row">
           <div class="size"><%= size %></div>
-          <div class="colContainer">
+          <div class="colContainer hide">
             <div class="col">
               <h2>Old screens</h2>
               <img src="" class="last" data-src="img/last/<%= name %>-<%= size %>.png?<%= now %>" data-size="<%= size %>">
@@ -383,6 +391,16 @@
     }, false );
   } )();
   </script>
-
+  <script>
+      $('body').on('click', '.size', function(evt){
+          var $colContainer = $(evt.currentTarget).parent().find('.colContainer');
+          if($colContainer.hasClass('hide')) {
+              $colContainer.removeClass('hide');
+          }
+          else {
+              $colContainer.addClass('hide');
+          }
+      });
+  </script>
 </body>
 </html>
