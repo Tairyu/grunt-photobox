@@ -18,7 +18,7 @@
           <div class="colContainer hide">
             <div class="col">
               <h2>Old screens</h2>
-              <a href="img/last/<%= name %>-<%= size %>.png?<%= now %>" target="_blank">
+              <a href="img/last/<%= name %>-<%= size %>.png?<%= now %>">
                 <img src="" class="last" data-src="img/last/<%= name %>-<%= size %>.png?<%= now %>" data-size="<%= size %>">
               </a>
               <p><%= timestamps.last %></p>
@@ -27,10 +27,10 @@
               <h3 class="processing">
                 <div id="semi_border"></div>
                 we are checking for different pixels..</h3>
-              <canvas>canvas is not supported</canvas>
+              <canvas class='hide'>canvas is not supported</canvas>
             </div><div class="col">
               <h2>New Screens</h2>
-              <a href="img/current/<%= name %>-<%= size %>.png?<%= now %>" target="_blank">
+              <a href="img/current/<%= name %>-<%= size %>.png?<%= now %>">
                 <img src="" class="current" data-src="img/current/<%= name %>-<%= size %>.png?<%= now %>" data-size="<%= size %>">
               </a>
               <p><%= timestamps.current %></p>
@@ -76,6 +76,8 @@
       cnvs.width     = dummyImage.width;
       cnvs.height    = dummyImage.height;
 
+      console.log(cnvs.getAttribute('data-filename'));
+
       var ctx = cnvs.getContext( '2d' );
 
       // draw first image and get pixel data
@@ -103,17 +105,17 @@
       worker.postMessage( data );
       worker.addEventListener( 'message', function( e ) {
         ctx.putImageData( e.data.imageData, 0, 0 );
-        processing.style.display = 'none'
+        processing.style.display = 'none';
         console.warn( 'Found ', e.data.amount, 'different pixels' );
       }, false);
 
     }
 
     window.addEventListener( 'load' , function() {
-      lastImages    = document.querySelectorAll( '.last' );
-      currentImages = document.querySelectorAll( '.current' );
-      canvasList    = document.querySelectorAll( 'canvas' ),
-      processing    = document.querySelectorAll( '.processing' );
+      lastImages    = document.querySelectorAll('.last');
+      currentImages = document.querySelectorAll('.current');
+      canvasList    = document.querySelectorAll('canvas');
+      processing    = document.querySelectorAll('.processing');
 
       for (var i = lastImages.length - 1; i >= 0; i--) {
         if (
@@ -126,11 +128,12 @@
             canvasList[ i ],
             processing[ i ]
           );
+          $(canvasList[i]).removeClass('hide');
         } else {
           processing[ i ].innerHTML = 'Nothing to process here.<br>' +
                                       'Only one image is available. :(';
         }
-      };
+      }
     }, false );
   } )();
   </script>
@@ -143,7 +146,14 @@
           else {
               $colContainer.addClass('hide');
           }
-      });
+      }).on('click', 'canvas', function(evt){
+          var img = new Image();
+          img.src = evt.currentTarget.toDataURL('image/png');
+          img.onload = function() {
+              location.href = img.src;
+          };
+      })
+
   </script>
 </body>
 </html>

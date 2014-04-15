@@ -202,6 +202,7 @@ main {
 
 .col canvas {
     width: 100%;
+    cursor: pointer;
 }
 
 .col img {
