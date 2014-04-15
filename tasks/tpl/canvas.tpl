@@ -76,8 +76,6 @@
       cnvs.width     = dummyImage.width;
       cnvs.height    = dummyImage.height;
 
-      console.log(cnvs.getAttribute('data-filename'));
-
       var ctx = cnvs.getContext( '2d' );
 
       // draw first image and get pixel data
