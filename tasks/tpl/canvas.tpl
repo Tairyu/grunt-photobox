@@ -4,6 +4,15 @@
   <title>photobox</title>
   <link rel="stylesheet" href="css/canvas.css"/>
   <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+  <script>
+      if(!window.JQuery){
+          var head = document.getElementsByTagName('head'),
+              script = document.createElement('script');
+
+          script.setAttribute('src', '/js/jquery.2.1.0.min.js');
+          head.item(0).appendChild(script);
+      }
+  </script>
 </head>
 <body>
   <h1><i></i>Photobox</h1>
