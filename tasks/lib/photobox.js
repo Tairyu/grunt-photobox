@@ -633,10 +633,12 @@ PhotoBox.prototype.tookPictureHandler = function() {
 
 PhotoBox.prototype.copyAssetFiles = function(srcpath){
   var that = this;
-  this.grunt.file.recurse(srcpath, function(srcpath, root, sub, filename){
-    if(sub.indexOf('img') === -1) {
+
+  this.grunt.file.recurse(srcpath, function(abspath, root, sub, filename){
+
+    if(typeof sub !== 'undefined' && sub.indexOf('img') === -1) {
       if(sub.indexOf('scripts') === 0 || sub.indexOf('css') === 0) {
-        that.grunt.file.copy(srcpath, path.join(that.options.indexPath, sub, filename));
+        that.grunt.file.copy(abspath, path.join(that.options.indexPath, sub, filename));
       }
     }
   });
