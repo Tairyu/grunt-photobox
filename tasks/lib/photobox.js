@@ -122,10 +122,12 @@ PhotoBox.prototype.createDiffImagesForCanvas = function(){
   var logger = this.grunt.log;
   logger.subhead('PHOTOBOX STARTED DIFF GENERATION.');
 
-  this.pictures.forEach(function(picture){
+  this.pictures.forEach(function(picture, index){
     picture = this.exchangeFilename(picture);
 
     logger.warn('started diff for ' + picture);
+
+    logger.warn(this.options.indexPath + 'img/last/'+picture+'.png');
 
     var oldFileExists = this.grunt.file.exists(
             this.options.indexPath + 'img/last/' + picture + '.png'
@@ -135,7 +137,7 @@ PhotoBox.prototype.createDiffImagesForCanvas = function(){
     );
 
     if(oldFileExists && currentFileExists){
-
+      logger.warn('start phantomJS');
       var opts = {};
       if (this.grunt.option('verbose')) {
         opts.stdio = 'inherit';
@@ -147,12 +149,16 @@ PhotoBox.prototype.createDiffImagesForCanvas = function(){
             args : [
               path.resolve(__dirname, 'diffImg.js'),
               this.options.indexPath,
-              picture
+              picture,
+              (9920+index)
             ],
             opts : opts
           },
 
-          function() { this.callback(); }.bind( this )
+          function() {
+            ++this.diffCount;
+            this.tookDiffHandler();
+          }.bind( this )
       );
     }
     else {
@@ -617,9 +623,10 @@ PhotoBox.prototype.tookPictureHandler = function() {
       if(typeof this.customAssets !== 'undefined'){
         this.copyAssetFiles(this.customAssets);
       }
-      this.createIndexFile();
+      //this.createIndexFile();
       // call done() to exit grunt task
-      this.callback();
+      //this.callback();
+      this.createDiffImagesForCanvas();
     }
   }
 };
@@ -681,7 +688,7 @@ PhotoBox.prototype.exchangeFilename = function(url){
       replace( /:[0-9]*/g, '').
       replace( /(\/)|(\|)/g, '-' ).
       replace(/\?/g, '!').
-      replace( '#', '_' );
+      replace( '#', '-' );
 };
 
 module.exports = PhotoBox;

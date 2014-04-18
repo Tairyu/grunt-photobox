@@ -22,21 +22,36 @@ var split = picture.split('-');
 var width = +split[1];
 
 // server
+var port   = system.args[3];
 var server = require('webserver').create();
-server.listen(99124, function (req, res) {
+var listening = server.listen(port, function (req, res) {
+
   res.statusCode = 200;
-  if (url === 'current.img') {
-    res.write(fs.read(indexPath + 'img/current' + picture) + '.png');
+  if (req.url === '/current.img') {
+    res.headers['Content-Type'] = 'image/png';
+    res.setEncoding('binary');
+    var curFs = fs.open(indexPath + 'img/last/' + picture + '.png', 'rb');
+    res.write(curFs.read());
+    curFs.close();
   }
-  else if (url === 'last.img') {
-    res.write(fs.read(indexPath + 'img/last' + picture) + '.png');
+  else if (req.url === '/last.img') {
+    res.headers['Content-Type'] = 'img/png';
+    res.setEncoding('binary');
+    var lastFs = fs.open(indexPath + 'img/last/' + picture + '.png', 'rb');
+    res.write(lastFs.read());
+    lastFs.close();
   }
   else {
+    res.headers['Content-Type'] = 'text/html';
     res.write('<html><body><img id="current" src="current.img"><canvas id="diff"></canvas><img id="last" src="last.img"></body></html>');
   }
 
   res.close();
 });
+if(!listening){
+  console.warn('could not create web server listening on port:' + port);
+  phantom.exit(1);
+}
 
 // webpage
 page.onError = function (msg) {
@@ -51,7 +66,8 @@ page.viewportSize = {
   width: width
 };
 
-page.open('127.0.0.1:99124', function (status) {
+page.open('http://localhost:' + port, function (status) {
+
   window.setTimeout(function () {
 
     // diffレンダリング
