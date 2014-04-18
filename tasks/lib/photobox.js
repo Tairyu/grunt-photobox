@@ -83,11 +83,7 @@ PhotoBox.prototype.createDiffImages = function() {
 
   this.pictures.forEach( function( picture ) {
     // TODO that can be done in on regex
-    picture = picture.replace( /(http:\/\/|https:\/\/)/, '')
-                     .replace( /:[0-9]*/g, '')
-                     .replace( /(\/)|(\|)/g, '-' )
-                     .replace(/\?/g, '!')
-                     .replace( '#', '-' );
+    picture = this.exchangeFilename(picture);
 
     this.grunt.log.writeln( 'started diff for ' + picture );
 
@@ -117,6 +113,55 @@ PhotoBox.prototype.createDiffImages = function() {
       this.tookDiffHandler();
     }
   }.bind( this ) );
+};
+
+/**
+ * TODO Actuel function to create the diff images for canvas.
+ */
+PhotoBox.prototype.createDiffImagesForCanvas = function(){
+  var logger = this.grunt.log;
+  logger.subhead('PHOTOBOX STARTED DIFF GENERATION.');
+
+  this.pictures.forEach(function(picture){
+    picture = this.exchangeFilename(picture);
+
+    logger.warn('started diff for ' + picture);
+
+    var oldFileExists = this.grunt.file.exists(
+            this.options.indexPath + 'img/last/' + picture + '.png'
+    );
+    var currentFileExists = this.grunt.file.exists(
+            this.options.indexPath + 'img/current/' + picture + '.png'
+    );
+
+    if(oldFileExists && currentFileExists){
+
+      var opts = {};
+      if (this.grunt.option('verbose')) {
+        opts.stdio = 'inherit';
+      }
+
+      this.grunt.util.spawn(
+          {
+            cmd  : phantomPath,
+            args : [
+              path.resolve(__dirname, 'diffImg.js'),
+              this.options.indexPath,
+              picture
+            ],
+            opts : opts
+          },
+
+          function() { this.callback(); }.bind( this )
+      );
+    }
+    else {
+      logger.error('Nothing to diff here - no old pictures available.');
+
+      ++this.diffCount;
+      this.tookDiffHandler();
+    }
+  }.bind(this));
 };
 
 
@@ -631,5 +676,12 @@ PhotoBox.prototype.writeTimestampFile = function() {
   );
 };
 
+PhotoBox.prototype.exchangeFilename = function(url){
+  return url.replace( /(http:\/\/|https:\/\/)/, '').
+      replace( /:[0-9]*/g, '').
+      replace( /(\/)|(\|)/g, '-' ).
+      replace(/\?/g, '!').
+      replace( '#', '_' );
+};
 
 module.exports = PhotoBox;
