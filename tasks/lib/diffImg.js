@@ -71,13 +71,14 @@ page.open('http://localhost:' + port, function (status) {
   window.setTimeout(function () {
 
     // diffレンダリング
-    page.evaluate(function () {
+    var diffImg = page.evaluate(function () {
       var currentImg = document.querySelector('#current');
       var lastImg = document.querySelector('#last');
       var canvas = document.querySelector('canvas');
 
       canvas.width = currentImg.width;
       canvas.height = currentImg.height;
+      console.log('canvas size width:'+canvas.width+' height:'+canvas.height);
 
       var ctx = canvas.getContext('2d');
 
@@ -96,7 +97,7 @@ page.open('http://localhost:' + port, function (status) {
       // TODO settingsの反映をどうするか
       var threshold = 10;
       var color = {red: 250, green: 0, blue: 0};
-      var filter = 'darker';
+      var filter = 'brighter';
 
       for (var i = 0, len = pxlsCur.data.length; i < len; i += 4) {
         if (Math.abs(pxlsCur.data[i] - pxlsLast.data[i]) > threshold ||
@@ -119,13 +120,6 @@ page.open('http://localhost:' + port, function (status) {
             pxlsDiff.data[i + 1] -= adjustment;
             pxlsDiff.data[i + 2] -= adjustment;
           }
-          else if (filter === 'grayscale') {
-            var y = 0.2126 * pxlsDiff.data[i] +
-                0.7152 * pxlsDiff.data[i + 1] +
-                0.0722 * pxlsDiff.data[i + 2];
-
-            pxlsDiff.data[i] = pxlsDiff.data[i + 1] = pxlsDiff[i + 2] = y;
-          }
         }
       }
 
@@ -133,7 +127,12 @@ page.open('http://localhost:' + port, function (status) {
 
       lastImg.style.display = 'none';
       currentImg.style.display = 'none';
+
+      return canvas;
     });
+
+    page.scrollPosition = { top: 0, left: 0 };
+    page.clipRect = { top: 0, left: 0, width: diffImg.width, height: diffImg.height };
 
     page.render(indexPath + 'img/diff/' + picture + '.png');
     phantom.exit(0);
