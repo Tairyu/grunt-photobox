@@ -30,7 +30,7 @@ var listening = server.listen(port, function (req, res) {
   if (req.url === '/current.img') {
     res.headers['Content-Type'] = 'image/png';
     res.setEncoding('binary');
-    var curFs = fs.open(indexPath + 'img/last/' + picture + '.png', 'rb');
+    var curFs = fs.open(indexPath + 'img/current/' + picture + '.png', 'rb');
     res.write(curFs.read());
     curFs.close();
   }
@@ -96,7 +96,7 @@ page.open('http://localhost:' + port, function (status) {
       // TODO settingsの反映をどうするか
       var threshold = 10;
       var color = {red: 250, green: 0, blue: 0};
-      var filter = 'grayscale';
+      var filter = 'darker';
 
       for (var i = 0, len = pxlsCur.data.length; i < len; i += 4) {
         if (Math.abs(pxlsCur.data[i] - pxlsLast.data[i]) > threshold ||
