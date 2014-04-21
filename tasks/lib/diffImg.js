@@ -43,7 +43,7 @@ var listening = server.listen(port, function (req, res) {
   }
   else {
     res.headers['Content-Type'] = 'text/html';
-    res.write('<html><body><img id="current" src="current.img"><canvas id="diff"></canvas><img id="last" src="last.img"></body></html>');
+    res.write('<html><body><img id="current" src="current.img"><canvas id="diff" style="position:absolute; top:0; left:0"></canvas><img id="last" src="last.img"></body></html>');
   }
 
   res.close();
