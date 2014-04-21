@@ -14,11 +14,12 @@ var system        = require ( 'system' ),
     webpage       = require( 'webpage' ),
     fs            = require( 'fs' ),
     page          = webpage.create(),
-    picture       = system.args[ 1 ],
+    picture       = system.args[1],
     split         = picture.split( '#' ),
-    url           = split[ 0 ],
-    width         = +split[ 1 ],
-    indexPath     = system.args[ 2 ],
+    url           = split[0],
+    width         = +split[1],
+    filename      = system.args[2],
+    indexPath     = system.args[3],
     settings      = fs.read( indexPath + 'options.json' );
 
 if ( settings !== '{}' ) {
@@ -64,16 +65,9 @@ page.open( url, function( status ) {
       width  : width
     };
 
-    var imgPath = indexPath +
-                  'img/current/' +
-                  url.replace( /(http:\/\/|https:\/\/)/, '')
-                     .replace( /:[0-9]*/g, '')
-                     .replace( /\//g, '-')
-                     .replace(/\?/g, '!') +
-                  '-' + width + '.png';
-
+    var imgPath = indexPath + 'img/current/' + filename + '.png';
     console.log( 'Rendering ' + imgPath );
-    page.render( imgPath );
+    page.render(imgPath);
 
     phantom.exit();
   }, 1000 );

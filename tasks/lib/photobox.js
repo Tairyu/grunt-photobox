@@ -147,7 +147,7 @@ PhotoBox.prototype.createDiffImagesForCanvas = function(){
           {
             cmd  : phantomPath,
             args : [
-              path.resolve(__dirname, 'diffImg.js'),
+              path.resolve(__dirname, 'diffImgScript.js'),
               this.options.indexPath,
               picture,
               (9920+index)
@@ -178,6 +178,7 @@ PhotoBox.prototype.createDiffImagesForCanvas = function(){
  */
 PhotoBox.prototype.createIndexFile = function() {
   this.grunt.log.subhead( 'PHOTOBOX STARTED INDEX FILE GENERATION' );
+  var that = this;
 
   var templateData = this.pictures.map(
     function( picture ) {
@@ -185,6 +186,7 @@ PhotoBox.prototype.createIndexFile = function() {
 
       return {
         url : split[0],
+        img : that.exchangeFilename(picture),
         size: split[1]
       };
     }
@@ -193,7 +195,7 @@ PhotoBox.prototype.createIndexFile = function() {
       prev[ current.url ] = [];
     }
 
-    prev[ current.url ].push( current.size );
+    prev[ current.url ].push({ size: current.size, img: current.img });
 
     return prev;
   }, {});
@@ -562,8 +564,8 @@ PhotoBox.prototype.startPhotoSession = function() {
     var args = [
       path.resolve( __dirname, 'photoboxScript.js' ),
       picture,
+      this.exchangeFilename(picture),
       this.options.indexPath,
-      this.options.indexPath + 'options.json'
     ];
 
     var opts = {};

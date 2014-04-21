@@ -18,28 +18,27 @@
   <h1><i></i>Photobox</h1>
   <main class="">
     <% _.each( _.keys( templateData ), function( url ) { %>
-      <% var name  = url.replace( /(http:\/\/|https:\/\/)/, '' ).replace( /:[0-9]*/g, '').replace( /\//g, '-' ).replace(/\?/g, '!'); %>
-      <div class="name"><a href="<%= url %>" data-name="<%= name %>" target="_blank"><%= name %></a></div>
+      <div class="name"><a href="<%= url %>" data-name="<%= url %>" target="_blank"><%= url %></a></div>
 
-      <% _.each( templateData[ url ], function( size ) {%>
+      <% _.each( templateData[ url ], function( data ) {%>
         <div class="row">
-          <div class="size"><%= size %></div>
+          <div class="size"><%= data.size %></div>
           <div class="colContainer hide">
             <div class="col">
               <h2>Old screens</h2>
-              <a href="img/last/<%= name %>-<%= size %>.png?<%= now %>">
-                <img src="" class="last" data-src="img/last/<%= name %>-<%= size %>.png?<%= now %>" data-size="<%= size %>">
+              <a href="img/last/<%= data.img %>.png?<%= now %>">
+                <img src="" class="last" data-src="img/last/<%= data.img %>.png?<%= now %>" data-size="<%= data.size %>">
               </a>
               <p><%= timestamps.last %></p>
             </div><div class="col">
               <h2>Difference</h2>
-                <a href="img/diff/<%= name %>-<%= size %>.png?<%= now %>">
-                  <img src="" class="last" data-src="img/diff/<%= name %>-<%= size %>.png?<%= now %>" data-size="<%= size %>">
+                <a href="img/diff/<%= data.img %>.png?<%= now %>">
+                  <img src="" class="last" data-src="img/diff/<%= data.img %>.png?<%= now %>" data-size="<%= data.size %>">
                 </a>
             </div><div class="col">
               <h2>New Screens</h2>
-              <a href="img/current/<%= name %>-<%= size %>.png?<%= now %>">
-                <img src="" class="current" data-src="img/current/<%= name %>-<%= size %>.png?<%= now %>" data-size="<%= size %>">
+              <a href="img/current/<%= data.img %>.png?<%= now %>">
+                <img src="" class="current" data-src="img/current/<%= data.img %>.png?<%= now %>" data-size="<%= data.size %>">
               </a>
               <p><%= timestamps.current %></p>
             </div>
