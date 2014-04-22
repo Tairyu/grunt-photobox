@@ -29,11 +29,13 @@ var PhotoBox = function( grunt, options, callback ) {
   this.options           = options;
   this.options.indexPath = this.getIndexPath();
   this.pictureCount      = 0;
+  this.templateOptions   = {};
 
   if ( typeof options.template === 'string' ) {
     this.template = options.template;
   } else if ( typeof options.template === 'object' ) {
     this.template = options.template.name;
+    this.templateOptions = options.template.options;
     this.customAssets = options.template.assets_dir;
   }
 
@@ -82,7 +84,7 @@ PhotoBox.prototype.createDiffImages = function() {
   this.grunt.log.subhead( 'PHOTOBOX STARTED DIFF GENERATION.');
 
   this.pictures.forEach( function( picture ) {
-    // TODO that can be done in on regex
+
     picture = this.exchangeFilename(picture);
 
     this.grunt.log.writeln( 'started diff for ' + picture );
@@ -150,7 +152,8 @@ PhotoBox.prototype.createDiffImagesForCanvas = function(){
               path.resolve(__dirname, 'diffImgScript.js'),
               this.options.indexPath,
               picture,
-              (9920+index)
+              (9920+index), //TODO portは設定可能にする
+              JSON.stringify(this.templateOptions)
             ],
             opts : opts
           },
@@ -688,11 +691,14 @@ PhotoBox.prototype.writeTimestampFile = function() {
 };
 
 PhotoBox.prototype.exchangeFilename = function(url){
-  return url.replace( /(http:\/\/|https:\/\/)/, '').
+  var parts_names = url.split('#');
+  var filename = parts_names[0].replace(/\/$/g, '').
+      replace( /(http:\/\/|https:\/\/)/, '').
       replace( /:[0-9]*/g, '').
       replace( /(\/)|(\|)/g, '-' ).
-      replace(/\?/g, '!').
-      replace( '#', '-' );
+      replace(/\?/g, '!');
+
+  return filename + '-' + parts_names[1];
 };
 
 module.exports = PhotoBox;

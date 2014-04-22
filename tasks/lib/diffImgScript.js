@@ -23,6 +23,8 @@ var width = +split[1];
 
 // server
 var port   = system.args[3];
+var options = JSON.parse(system.args[4] || "{}");
+
 var server = require('webserver').create();
 var listening = server.listen(port, function (req, res) {
 
@@ -43,7 +45,14 @@ var listening = server.listen(port, function (req, res) {
   }
   else {
     res.headers['Content-Type'] = 'text/html';
-    res.write('<html><body><img id="current" src="current.img"><canvas id="diff" style="position:absolute; top:0; left:0"></canvas><img id="last" src="last.img"></body></html>');
+    var contents = '<html><body>' +
+                   '<img id="current" src="current.img">' +
+                   '<canvas id="diff" style="position:absolute; top:0; left:0"' +
+                   ' data-filter="'+ (options.diffFilter || '') + '"' +
+                   ' data-color="' + (options.highlightColor || '') + '"' +
+                   '></canvas>' +
+                   '<img id="last" src="last.img"></body></html>';
+    res.write(contents);
   }
 
   res.close();
@@ -66,7 +75,11 @@ page.viewportSize = {
   width: width
 };
 
+page.libraryPath = indexPath + 'scripts';
+
 page.open('http://localhost:' + port, function (status) {
+
+  page.injectJs('jquery.2.1.0.min.js');
 
   window.setTimeout(function () {
 
@@ -75,10 +88,10 @@ page.open('http://localhost:' + port, function (status) {
       var currentImg = document.querySelector('#current');
       var lastImg = document.querySelector('#last');
       var canvas = document.querySelector('canvas');
+      var $canvas = $('canvas');
 
       canvas.width = currentImg.width;
       canvas.height = currentImg.height;
-      console.log('canvas size width:'+canvas.width+' height:'+canvas.height);
 
       var ctx = canvas.getContext('2d');
 
@@ -97,7 +110,7 @@ page.open('http://localhost:' + port, function (status) {
       // TODO settingsの反映をどうするか
       var threshold = 10;
       var color = {red: 250, green: 0, blue: 0};
-      var filter = 'brighter';
+      var filter = $canvas.data('filter');
 
       for (var i = 0, len = pxlsCur.data.length; i < len; i += 4) {
         if (Math.abs(pxlsCur.data[i] - pxlsLast.data[i]) > threshold ||
