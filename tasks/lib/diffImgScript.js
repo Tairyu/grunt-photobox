@@ -80,6 +80,7 @@ page.libraryPath = indexPath + 'scripts';
 page.open('http://localhost:' + port, function (status) {
 
   page.injectJs('jquery.2.1.0.min.js');
+  page.injectJs('color-0.5.0.min.js');
 
   window.setTimeout(function () {
 
@@ -107,9 +108,11 @@ page.open('http://localhost:' + port, function (status) {
       var diffAmount = 0;
       var adjustment = 150;
 
-      // TODO settingsの反映をどうするか
       var threshold = 10;
-      var color = {red: 250, green: 0, blue: 0};
+      var highlight = Color($canvas.data('color')).rgb();
+      if(highlight.r === 0 && highlight.g === 0 && highlight.b === 0){
+        highlight.r = 255;
+      }
       var filter = $canvas.data('filter');
 
       for (var i = 0, len = pxlsCur.data.length; i < len; i += 4) {
@@ -117,9 +120,9 @@ page.open('http://localhost:' + port, function (status) {
             Math.abs(pxlsCur.data[i + 1] - pxlsLast.data[i + 1]) > threshold ||
             Math.abs(pxlsCur.data[i + 2] - pxlsLast.data[i + 2]) > threshold) {
 
-          pxlsDiff.data[i] = color.red;
-          pxlsDiff.data[i + 1] = color.green;
-          pxlsDiff.data[i + 2] = color.blue;
+          pxlsDiff.data[i] = highlight.r;
+          pxlsDiff.data[i + 1] = highlight.g;
+          pxlsDiff.data[i + 2] = highlight.b;
           diffAmount++;
         }
         else {
