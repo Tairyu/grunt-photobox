@@ -454,9 +454,9 @@ PhotoBox.prototype.movePictures = function() {
     this.grunt.log.error('No old pictures are existant.');
   }
   else {
-    var rename = this.options.indexPath + '/img/last';
-    if(this.grunt.file.exists(rename)){
-      rename = '/img/' + moment().utc(this.getTimestamp('current')).format('YYYYMMDD_HH-mm-ss');
+    var rename = '/img/last';
+    if(this.grunt.file.exists(this.options.indexPath + rename)){
+      rename = '/img/' + moment(new Date(this.getTimestamp('current'))).format('YYYYMMDD_HH-mm-ss');
     }
     fs.renameSync(
       this.options.indexPath + '/img/current',
