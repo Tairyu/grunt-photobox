@@ -1,25 +1,5 @@
 # grunt-photobox
-
-[![Build Status](http://img.shields.io/travis/stefanjudis/grunt-photobox.svg)](https://travis-ci.org/stefanjudis/grunt-photobox) [![NPM version](http://img.shields.io/npm/v/grunt-photobox.svg)](http://badge.fury.io/js/grunt-photobox) [![Dependency Status](http://img.shields.io/gemnasium/stefanjudis/grunt-photobox.svg)](https://gemnasium.com/stefanjudis/grunt-photobox) [![Code Climate](http://img.shields.io/codeclimate/github/stefanjudis/grunt-photobox.svg)](https://codeclimate.com/github/stefanjudis/grunt-photobox) [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
-
-![image](https://raw.github.com/stefanjudis/grunt-photobox/master/tasks/assets/img/photoBox.png)
-
-> Plugin to prevent your project of broken layout via screenshot photo sessions of your site.
-
-## Getting Started
-This plugin requires Grunt `~0.4.1`
-
-If you haven't used [Grunt](http://gruntjs.com/) before, be sure to check out the [Getting Started](http://gruntjs.com/getting-started) guide, as it explains how to create a [Gruntfile](http://gruntjs.com/sample-gruntfile) as well as install and use Grunt plugins. Once you're familiar with that process, you may install this plugin with this command:
-
-```shell
-npm install grunt-photobox --save-dev
-```
-
-Once the plugin has been installed, it may be enabled inside your Gruntfile with this line of JavaScript:
-
-```js
-grunt.loadNpmTasks('grunt-photobox');
-```
+このプラグインは[grunt-photobox](https://github.com/stefanjudis/grunt-photobox)を元に、独自に改修したものです.
 
 ## The "photobox" task
 
@@ -44,7 +24,7 @@ Photobox helps you to not deploy any broken layout to production. It takes scree
 
 #### ImageMagick and Canvas representation (generated diff):
 
-![image](https://raw.github.com/stefanjudis/grunt-photobox/master/tasks/assets/img/imageMagick.png)
+![image](https://raw.github.com/Tairyu/grunt-photobox/master/tasks/assets/img/imageMagick.png)
 
 ### Options
 
@@ -134,7 +114,7 @@ options : {
     name    : 'canvas',
     options : {
       highlightColor : '#0000ff',  //
-      diffFilter     : 'grayscale' //  default == no filter 'grayscale' | 'darker' | 'brighter'
+      diffFilter     : 'darker' //  default == no filter | 'darker' | 'brighter'
     }
   }
   ...
@@ -150,7 +130,7 @@ Currently only supported set to `canvas`.
 
 Type: `String`
 
-Default value: '#0000ff'
+Default value: '#ff0000'
 
 A string representing a given color for highlighted different areas.
 
@@ -160,10 +140,9 @@ Type: `String`
 
 Default value: `default`
 
-4 modes for diff image processing are available:
+3 modes for diff image processing are available:
 
 - `default` - image information in diff image will not be changed
-- `grayscale` - image information in diff image will be changed to grayscale
 - `darker` - image information in diff image will be changed to a darker image
 - `brighter` - image information in diff image will be change to a brighter image
 
@@ -234,7 +213,7 @@ grunt.initConfig( {
         name    : 'canvas',
         options : {
           highlightColor : '#0000ff',  // template.options.hightlightColor || highlightcolor || default
-          diffFilter     : 'grayscale' //  'default' == no filter | 'grayscale' | 'darker' | 'brighter'
+          diffFilter     : 'darker' //  'default' == no filter | 'darker' | 'brighter'
         }
       },
       urls           : [ 'http://4waisenkinder.de' ]
@@ -259,15 +238,3 @@ grunt.initConfig( {
   }
 } );
 ```
-
-## Contributing
-
-In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
-
-## Release History
-
-Please check release history at [Github](https://github.com/stefanjudis/grunt-photobox/releases). :)
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/stefanjudis/grunt-photobox/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
