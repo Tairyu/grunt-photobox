@@ -8,9 +8,10 @@
 
 'use strict';
 
-var fs           = require( 'fs' ),
-    path         = require( 'path' ),
-    phantomjs    = require( 'phantomjs' ),
+var fs           = require('fs'),
+    path         = require('path'),
+    phantomjs    = require('phantomjs'),
+    moment       = require('moment'),
     phantomPath  = phantomjs.path;
 
 /**
@@ -229,22 +230,24 @@ PhotoBox.prototype.createIndexFile = function() {
  *
  * @param  {Array|String} folder folder path(s)
  */
-PhotoBox.prototype.deleteFolder = function( folder ) {
+PhotoBox.prototype.deleteFolder = function(folder){
   var grunt   = this.grunt,
       options = this.options;
 
-  function deleteIt( folderPath ) {
-    if ( grunt.file.exists( options.indexPath + folderPath ) ) {
-      grunt.file.delete( options.indexPath + folderPath );
+  function deleteIt(folderPath) {
+    var fullPath = options.indexPath + folderPath;
+    if (grunt.file.exists(fullPath)) {
+      grunt.file.delete(fullPath);
     }
   }
 
-  if ( folder instanceof Array ) {
-    folder.forEach( function( folderPath ) {
-      deleteIt( folderPath );
-    }.bind( this ) );
-  } else {
-    deleteIt( folder );
+  if(folder instanceof Array) {
+    folder.forEach(function(folderPath) {
+      deleteIt(folderPath);
+    }.bind(this));
+  }
+  else {
+    deleteIt(folder);
   }
 };
 
@@ -441,25 +444,28 @@ PhotoBox.prototype.getTimestamps = function() {
  * @tested
  */
 PhotoBox.prototype.movePictures = function() {
-  this.deleteFolder( [ '/img/last', '/img/diff' ] );
+  this.deleteFolder( [ '/img/diff' ] );
 
   // create new diff folder - imageMagick is not able to create it on its own
   this.grunt.file.mkdir( this.options.indexPath + '/img/diff' );
 
   // move current picture to old pictures
-  if ( !this.grunt.file.exists( this.options.indexPath + '/img/current' ) ) {
-    this.grunt.log.error(
-      'No old pictures are existant.'
-    );
-  } else {
+  if (!this.grunt.file.exists(this.options.indexPath + '/img/current')) {
+    this.grunt.log.error('No old pictures are existant.');
+  }
+  else {
+    var rename = this.options.indexPath + '/img/last';
+    if(this.grunt.file.exists(rename)){
+      rename = '/img/' + moment().utc(this.getTimestamp('current')).format('YYYYMMDD_HH-mm-ss');
+    }
     fs.renameSync(
       this.options.indexPath + '/img/current',
-      this.options.indexPath + '/img/last',
-      function( err ) {
-        if ( err ) {
-          this.grunt.log.error( err );
+      this.options.indexPath + rename,
+      function(err) {
+        if (err) {
+          this.grunt.log.error(err);
           this.grunt.verbose.error();
-          this.grunt.fail.warn( 'Rename operation failed.' );
+          this.grunt.fail.warn('Rename operation failed.');
         }
       }
     );
@@ -690,6 +696,12 @@ PhotoBox.prototype.writeTimestampFile = function() {
   );
 };
 
+/**
+ * output filename from url string
+ *
+ * @param {String} url
+ * @return {String} filename
+ */
 PhotoBox.prototype.exchangeFilename = function(url){
   var parts_names = url.split('#');
   var filename = parts_names[0].replace(/\/$/g, '').
